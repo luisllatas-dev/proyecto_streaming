@@ -33,9 +33,9 @@ function ServiceCard({ service }) {
         </div>
 
         {/* Botón */}
-        <button className="mt-2 w-full cursor-pointer rounded-xl bg-indigo-600 py-2.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-indigo-500 active:bg-indigo-700">
+        <a href="https://wa.me/51933863899" target="_blank" rel="noopener noreferrer"><button className="mt-2 w-full cursor-pointer rounded-xl bg-indigo-600 py-2.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-indigo-500 active:bg-indigo-700">
           Contratar
-        </button>
+        </button></a>
       </div>
     </div>
   );
