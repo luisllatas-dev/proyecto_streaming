@@ -1,0 +1,10 @@
+{
+  "buildCommand": "cd astro_services && npm install && npm run build",
+  "outputDirectory": "astro_services/dist",
+  "rewrites": [
+    {
+      "source": "/api/services/:path*",
+      "destination": "/api/services/index"
+    }
+  ]
+}

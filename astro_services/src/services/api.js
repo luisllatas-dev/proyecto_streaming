@@ -1,4 +1,7 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+// En producción Vercel, las funciones están en /api
+// En desarrollo local, apuntan al backend Express
+const API_BASE_URL = import.meta.env.VITE_API_URL || 
+  (import.meta.env.PROD ? '/api' : 'http://localhost:5000/api');
 
 /**
  * Obtiene todos los servicios desde la API.
