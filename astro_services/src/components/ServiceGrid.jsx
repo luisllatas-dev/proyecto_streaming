@@ -9,8 +9,12 @@ function ServiceGrid({ services }) {
 
   return (
     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      {services.map((service) => (
-        <ServiceCard key={service._id} service={service} />
+      {services.map((service, index) => (
+        <ServiceCard 
+          key={service._id} 
+          service={service} 
+          priority={index < 3}
+        />
       ))}
     </div>
   );

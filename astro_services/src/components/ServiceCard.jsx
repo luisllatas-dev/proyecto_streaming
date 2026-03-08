@@ -1,4 +1,4 @@
-function ServiceCard({ service }) {
+function ServiceCard({ service, priority = false }) {
   const { imagen, titulo, precio, descuento, descripcion } = service;
   const precioFinal = descuento > 0 ? (precio * (1 - descuento / 100)).toFixed(2) : precio.toFixed(2);
 
@@ -10,6 +10,9 @@ function ServiceCard({ service }) {
           src={imagen}
           alt={titulo}
           className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+          loading={priority ? 'eager' : 'lazy'}
+          fetchPriority={priority ? 'high' : 'auto'}
+          decoding={priority ? 'sync' : 'async'}
         />
         {descuento > 0 && (
           <span className="absolute top-3 right-3 rounded-full bg-emerald-500 px-3 py-1 text-xs font-bold text-white shadow-md">
