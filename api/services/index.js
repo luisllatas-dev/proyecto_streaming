@@ -49,13 +49,25 @@ const Service = mongoose.models.Service || mongoose.model('Service', serviceSche
 let cachedDb = null;
 
 async function connectDB() {
-  if (cachedDb) {
+  if (cachedDb && mongoose.connection.readyState === 1) {
     return cachedDb;
   }
 
-  const conn = await mongoose.connect(process.env.MONGODB_URI);
-  cachedDb = conn;
-  return cachedDb;
+  if (!process.env.MONGODB_URI) {
+    throw new Error('MONGODB_URI no está definida en las variables de entorno');
+  }
+
+  try {
+    const conn = await mongoose.connect(process.env.MONGODB_URI, {
+      serverSelectionTimeoutMS: 5000,
+    });
+    cachedDb = conn;
+    console.log('MongoDB conectado exitosamente');
+    return cachedDb;
+  } catch (error) {
+    console.error('Error conectando a MongoDB:', error.message);
+    throw error;
+  }
 }
 
 // Handler principal
@@ -77,14 +89,19 @@ export default async function handler(req, res) {
   }
 
   try {
+    console.log('Iniciando conexión a MongoDB...');
     await connectDB();
+    console.log('Conexión establecida');
 
     const { id } = req.query;
+    console.log(`Método: ${req.method}, ID: ${id || 'ninguno'}`);
 
     // GET /api/services
     if (req.method === 'GET' && !id) {
+      console.log('Obteniendo todos los servicios...');
       const services = await Service.find().sort({ createdAt: -1 });
-      return res.json(services);
+      console.log(`Servicios encontrados: ${services.length}`);
+      return res.status(200).json(services);
     }
 
     // GET /api/services/:id
@@ -93,7 +110,7 @@ export default async function handler(req, res) {
       if (!service) {
         return res.status(404).json({ message: 'Servicio no encontrado' });
       }
-      return res.json(service);
+      return res.status(200).json(service);
     }
 
     // POST /api/services
@@ -111,7 +128,7 @@ export default async function handler(req, res) {
       if (!service) {
         return res.status(404).json({ message: 'Servicio no encontrado' });
       }
-      return res.json(service);
+      return res.status(200).json(service);
     }
 
     // DELETE /api/services/:id
@@ -120,12 +137,17 @@ export default async function handler(req, res) {
       if (!service) {
         return res.status(404).json({ message: 'Servicio no encontrado' });
       }
-      return res.json({ message: 'Servicio eliminado correctamente' });
+      return res.status(200).json({ message: 'Servicio eliminado correctamente' });
     }
 
     return res.status(405).json({ message: 'Método no permitido' });
   } catch (error) {
     console.error('Error en la API:', error);
-    return res.status(500).json({ message: 'Error del servidor', error: error.message });
+    console.error('Stack trace:', error.stack);
+    return res.status(500).json({ 
+      message: 'Error del servidor', 
+      error: error.message,
+      details: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 }
