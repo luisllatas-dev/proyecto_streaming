@@ -1,3 +1,4 @@
+import { useState, useMemo } from 'react';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import ServiceGrid from './components/ServiceGrid';
@@ -5,16 +6,24 @@ import useServices from './hooks/useServices';
 
 function App() {
   const { services, loading, error } = useServices();
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const filteredServices = useMemo(() => {
+    if (!searchTerm.trim()) return services;
+    return services.filter((service) =>
+      service.titulo.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+  }, [services, searchTerm]);
 
   return (
     <div className="flex min-h-screen flex-col bg-gray-950 text-white">
-      <Header />
+      <Header searchTerm={searchTerm} onSearchChange={setSearchTerm} />
 
       <main className="mx-auto w-full max-w-7xl flex-1 px-6 py-12">
         {/* Hero */}
         <section className="mb-12 text-center">
           <h2 className="mb-3 text-4xl font-extrabold tracking-tight">
-            Streaming e IPTV al mejor precio
+            Streaming, IPTV y más al mejor precio
           </h2>
           <p className="mx-auto max-w-2xl text-gray-400">
             Disfruta de tus plataformas favoritas con los planes más accesibles del mercado.
@@ -37,7 +46,7 @@ function App() {
             </div>
           )}
 
-          {!loading && !error && <ServiceGrid services={services} />}
+          {!loading && !error && <ServiceGrid services={filteredServices} />}
         </section>
       </main>
 

@@ -3,7 +3,7 @@ import ServiceCard from './ServiceCard';
 function ServiceGrid({ services }) {
   if (services.length === 0) {
     return (
-      <p className="text-center text-gray-500">No hay servicios disponibles por el momento.</p>
+      <p className="text-center text-gray-500">Servicio no encontrado.</p>
     );
   }
 
