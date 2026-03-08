@@ -14,7 +14,7 @@ function Header({ searchTerm, onSearchChange }) {
         {/* Logo */}
         <div className="flex items-center gap-3">
           <h1 className="text-xl font-bold tracking-tight text-white">
-            Astro <span className="text-indigo-400">Services</span>
+            Astro <span className="text-indigo-400">Streaming</span>
           </h1>
         </div>
 
