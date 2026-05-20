@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import verifyApikey from '../../middlewares/auth.js';
 import {
   getServices,
   getServiceById,
@@ -9,7 +10,7 @@ import {
 
 const router = Router();
 
-router.route('/').get(getServices).post(createService);
-router.route('/:id').get(getServiceById).put(updateService).delete(deleteService);
+router.route('/').get(getServices).post(verifyApikey, createService);
+router.route('/:id').get(getServiceById).put(verifyApikey ,updateService).delete(verifyApikey, deleteService);
 
 export default router;
